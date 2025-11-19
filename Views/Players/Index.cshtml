@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Balanced_Soccer_Team_Generator.Models.Player>
+
+@{
+    ViewData["Title"] = "Players";
+}
+
+<h1>Players</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Add New Player</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Ball Control</th>
+            <th>Passing</th>
+            <th>Dribbling</th>
+            <th>Defense</th>
+            <th>Shooting</th>
+            <th>Overall</th>
+            <th>Rank</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.BallControl</td>
+                <td>@p.PassingAccuracy</td>
+                <td>@p.Dribbling</td>
+                <td>@p.DefensiveAwareness</td>
+                <td>@p.Shooting</td>
+                <td>@p.OverallScore</td>
+                <td>@p.Rank</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@p.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@p.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a class="btn btn-success" asp-controller="Teams" asp-action="SelectPlayers">Generate Teams</a>
+</p>

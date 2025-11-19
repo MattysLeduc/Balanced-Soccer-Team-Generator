@@ -1,0 +1,23 @@
+﻿@model Balanced_Soccer_Team_Generator.Models.Player
+
+<h1>Edit Player</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    @foreach (var field in new[] { "BallControl", "PassingAccuracy", "Dribbling", "DefensiveAwareness", "Shooting" })
+    {
+        <div class="mb-3">
+            <label asp-for="@field"></label>
+            <input asp-for="@field" class="form-control" type="number" min="1" max="10" />
+        </div>
+    }
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>

@@ -1,0 +1,41 @@
+﻿@model List<Balanced_Soccer_Team_Generator.ViewModels.TeamResultVM>
+
+<h1>Teams Result</h1>
+
+<div class="row">
+    @foreach (var team in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@team.TeamName</strong>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Score:</strong> @team.TotalScore</p>
+
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Overall</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in team.Players)
+                            {
+                                <tr>
+                                    <td>@p.Name</td>
+                                    <td>@p.OverallScore</td>
+                                    <td>@p.Rank</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<a class="btn btn-primary" asp-controller="Teams" asp-action="SelectPlayers">Back</a>
