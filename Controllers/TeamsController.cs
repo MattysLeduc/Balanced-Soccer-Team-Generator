@@ -47,18 +47,13 @@ namespace Balanced_Soccer_Team_Generator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SelectPlayers(GenerateTeamsVM vm)
         {
-            if (!ModelState.IsValid) return View(vm);
+            if (!ModelState.IsValid)
+                return View(vm);
 
             var selectedIds = vm.Players
                 .Where(p => p.IsPresent)
                 .Select(p => p.PlayerId)
                 .ToList();
-
-            if (!selectedIds.Any())
-            {
-                ModelState.AddModelError("", "Please select at least one player.");
-                return View(vm);
-            }
 
             var players = await _context.Players
                 .Where(p => selectedIds.Contains(p.Id))
@@ -68,7 +63,10 @@ namespace Balanced_Soccer_Team_Generator.Controllers
 
             var teams = _teamService.CreateBalancedTeams(players, vm.NumberOfTeams);
 
-            return View("Results", teams);
+            // Show teams on the right side
+            ViewBag.GeneratedTeams = teams;
+
+            return View(vm);
         }
     }
 }

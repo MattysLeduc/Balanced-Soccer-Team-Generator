@@ -1,43 +1,110 @@
 ﻿@model Balanced_Soccer_Team_Generator.ViewModels.GenerateTeamsVM
 
-<h1>Generate Balanced Teams</h1>
+@{
+    ViewData["Title"] = "Team Generator";
+}
 
-<form asp-action="SelectPlayers" method="post">
-    <div class="mb-3">
-        <label asp-for="NumberOfTeams"></label>
-        <input asp-for="NumberOfTeams" class="form-control" min="1" />
-        <span asp-validation-for="NumberOfTeams" class="text-danger"></span>
-    </div>
+<link rel="stylesheet" href="~/css/site.css" />
 
-    <h3>Select Present Players</h3>
+<h1 class="mb-4">Balanced Soccer Team Generator</h1>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Present</th>
-                <th>Name</th>
-                <th>Overall</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.Players.Count; i++)
-            {
-                <tr>
-                    <td>
-                        <input asp-for="Players[@i].IsPresent" />
+<div class="manage-players-bar">
+    <a class="btn-manage" asp-controller="Players" asp-action="Index">Manage Players</a>
+    <a class="btn-manage green" asp-controller="Players" asp-action="Create">Add Player</a>
+</div>
+
+
+<div class="team-container">
+
+    <!-- LEFT COLUMN: PLAYER SELECTION -->
+    <div class="player-column">
+
+        <h2>Select Players</h2>
+
+        <form asp-action="SelectPlayers" method="post">
+
+            <div class="mb-3">
+                <label asp-for="NumberOfTeams" class="form-label"><strong>Number of Teams</strong></label>
+                <input asp-for="NumberOfTeams" class="form-control" min="1" />
+                <span asp-validation-for="NumberOfTeams" class="text-danger"></span>
+            </div>
+
+            <div class="player-list">
+                @for (int i = 0; i < Model.Players.Count; i++)
+                {
+                    <div class="select-player-row">
+                        <div>
+                            <input asp-for="Players[@i].IsPresent" />
+                            <strong style="margin-left:8px">@Model.Players[i].Name</strong>
+                        </div>
+
+                        <span class="overall-score">Overall: @Model.Players[i].OverallScore</span>
+
                         <input type="hidden" asp-for="Players[@i].PlayerId" />
                         <input type="hidden" asp-for="Players[@i].Name" />
                         <input type="hidden" asp-for="Players[@i].OverallScore" />
-                    </td>
-                    <td>@Model.Players[i].Name</td>
-                    <td>@Model.Players[i].OverallScore</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </div>
+                }
+            </div>
 
-    <button class="btn btn-success" type="submit">Generate Teams</button>
-</form>
+            <button type="submit" class="btn-main mt-3">Generate Teams</button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- RIGHT COLUMN: GENERATED TEAMS -->
+    <div class="team-column">
+
+        <h2>Generated Teams</h2>
+
+        @if (ViewBag.GeneratedTeams != null)
+        {
+            var generatedTeams = (List<Balanced_Soccer_Team_Generator.ViewModels.TeamResultVM>)ViewBag.GeneratedTeams;
+
+            int teamIndex = 1;
+
+            <div>
+                @foreach (var team in generatedTeams)
+                {
+                    <div class="team-card team-@teamIndex">
+                        <div class="team-title">@team.TeamName</div>
+                        <div class="team-total">Total Score: @team.TotalScore</div>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Overall</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in team.Players)
+                                {
+                                    <tr>
+                                        <td>@p.Name</td>
+                                        <td>@p.OverallScore</td>
+                                        <td>@p.Rank</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    teamIndex++;
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Generate teams to see results here.</p>
+        }
+
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
